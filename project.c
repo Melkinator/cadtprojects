@@ -116,6 +116,7 @@ int main() {
                 DrawRectangleRec(fruits[i], (mouseHover2 == i) ? RED : GRAY);
                 DrawText(fruitNames[i], fruits[i].x+15, fruits[i].y+15, 25, WHITE);
             }
+            if (CheckCollisionPointRec(mouse, button[1])&&IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) clickFruits = false;
         }
         if (prompt) {
             for (int i=0;i<3;i++) {
