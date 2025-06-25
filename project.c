@@ -7,6 +7,8 @@ bool clickView = false;
 bool clickFruits = false;
 bool saveEyes = false;
 bool addItem = false;
+bool addAmount = false;
+bool removeAmount = false;
 bool prompt = false;
 int max_items = 3;
 int max_fruits = 2;
@@ -55,20 +57,24 @@ int main() {
             ClearBackground(WHITE);
         }
         for (int i=0;i<max_items;i++) {
-            button[i] = (Rectangle){20.0f, (float)(70+64*i), 200.0f, 50.0f};
+            button[i] = (Rectangle){20.0f, (float)(80+64*i), 200.0f, 50.0f};
             if (CheckCollisionPointRec(mouse, button[i])) mouseHover1 = i;
         }
 
         for (int i=0;i<max_fruits;i++) {
-            fruits[i] = (Rectangle){240.0f, (float)(70+64*i), 200.0f, 50.0f};
+            fruits[i] = (Rectangle){240.0f, (float)(80+64*i), 200.0f, 50.0f};
             if (CheckCollisionPointRec(mouse, fruits[i])) mouseHover2=i;
         }
 
         for (int i=0;i<3;i++) {
-            promptButtons[i] = (Rectangle){460.0f, (float)(70+64*i), 210.0f, 50.0f};
+            promptButtons[i] = (Rectangle){460.0f, (float)(80+64*i), 210.0f, 50.0f};
         }
 
         BeginDrawing();
+        DrawRectangle(10,5,1180,60, LIGHTGRAY);
+        DrawRectangle(10,70,218,820, LIGHTGRAY);
+        DrawRectangle(230,70,960,820, LIGHTGRAY);
+
         DrawText("Press P to enable light/dark mode.", 830, 0, 20, GREEN);
 
         DrawRectangleRec(grocery, GRAY);
@@ -116,7 +122,10 @@ int main() {
                 DrawRectangleRec(fruits[i], (mouseHover2 == i) ? RED : GRAY);
                 DrawText(fruitNames[i], fruits[i].x+15, fruits[i].y+15, 25, WHITE);
             }
-            if (CheckCollisionPointRec(mouse, button[1])&&IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) clickFruits = false;
+            if (CheckCollisionPointRec(mouse, button[1])&&IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+                clickFruits = false;
+                prompt = false;
+            }
         }
         if (prompt) {
             for (int i=0;i<3;i++) {
