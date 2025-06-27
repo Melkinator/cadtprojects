@@ -25,5 +25,6 @@ typedef struct {
 } Locker;
 
 int main() {
+    printf("test");
     return 0;
 }
