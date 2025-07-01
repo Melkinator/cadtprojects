@@ -23,7 +23,7 @@ typedef struct {
     char assigned_to[15]; // student_id
     char condition[20];   // e.g., "Good", "Damaged"
 } Locker;
-
+// test
 int main() {
     printf("test");
     return 0;
