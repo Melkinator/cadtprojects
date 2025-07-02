@@ -22,6 +22,38 @@ typedef struct {
     Booking booking;    // booking data embedded
 } User;
 
+void registerNewUser() {
+
+}
+
+void bookCourt() {
+
+}
+
+void viewCourtBookings() {
+
+}
+
+void cancelCourtBooking() {
+
+}
+
+void assignLocker() {
+
+}
+
+void changeLocker() {
+
+}
+
+void viewLockerStatus() {
+
+}
+
+void viewUserInfo() {
+    
+}
+
 int main() {
     bool end = false;
     int input;
@@ -43,21 +75,21 @@ int main() {
 
         switch (input) {
             case 1:
-
+                registerNewUser();
             case 2:
-
+                bookCourt();
             case 3:
-            
+                viewCourtBookings();
             case 4:
-
+                cancelCourtBooking();
             case 5:
-
+                assignLocker();
             case 6:
-
+                changeLocker();
             case 7:
-            
+                viewLockerStatus();
             case 8:
-
+                viewUserInfo();
             case 9:
                 end = true;
                 break;
