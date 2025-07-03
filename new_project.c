@@ -22,8 +22,10 @@ typedef struct {
     Booking booking;    // booking data embedded
 } User;
 
-void registerNewUser() {
-
+void registerNewUser(User users[], int size) {
+    for (int i=0;i<size;i++) {
+        printf("%d ", i+1);
+    }
 }
 
 void bookCourt() {
@@ -55,6 +57,9 @@ void viewUserInfo() {
 }
 
 int main() {
+    User *users;
+    int size=0;
+
     bool end = false;
     int input;
     do {
@@ -71,26 +76,42 @@ int main() {
         printf("\nYour input: ");
         scanf("%d", &input);
 
+        users = malloc(size*sizeof(User));
+        if (users==NULL) {
+            printf("Memory Allocation Failed.");
+            exit(1);
+        }
+
         system("cls");
 
         switch (input) {
             case 1:
-                registerNewUser();
+                size++;
+                registerNewUser(users, size);
+                break;
             case 2:
                 bookCourt();
+                break;
             case 3:
                 viewCourtBookings();
+                break;
             case 4:
                 cancelCourtBooking();
+                break;
             case 5:
                 assignLocker();
+                break;
             case 6:
                 changeLocker();
+                break;
             case 7:
                 viewLockerStatus();
+                break;
             case 8:
                 viewUserInfo();
+                break;
             case 9:
+                free(users);
                 end = true;
                 break;
             default:
