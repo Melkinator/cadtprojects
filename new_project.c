@@ -28,8 +28,47 @@ void registerNewUser(User users[], int size) {
     }
 }
 
-void bookCourt() {
-
+void bookCourt(User users[], int size) {
+    int input, inputID;
+    char inputDate[11], inputTime[6];
+    bool end = false;
+    if (size==0) {
+        printf("\nYou do not have any users registered. Please register a new user before booking.");
+    } else if (size>0) {
+        printf("\nFor which user do you want to book a court for? (0-%d): ", size-1);
+        scanf("%d", &input);
+        if (input>=size) {
+            printf("\nUser does not exist.");
+        } else {
+            while (!end) {
+                printf("\nWhich court do you want to book: ");
+                scanf("%d", &inputID);
+                bool conflictFound = false;
+                while (getchar() != '\n');
+                for (int i=0;i<size;i++) {
+                    if (i==input) {
+                        continue; // Skip the current user
+                    } else if (inputID==users[i].booking.court_id) {
+                        printf("\nConflicting court IDs with another user! Please try again.");
+                        conflictFound = true;
+                        break;
+                    }
+                }
+                if (!conflictFound) {
+                    users[input].booking.court_id = inputID;
+                    end = true;
+                    printf("\nWhat date do you want to book the court on (DD-MM-YYYY): ");
+                    scanf("%[^\n]s", &inputDate);
+                    while (getchar() != '\n');
+                    strcpy(users[input].booking.date, inputDate);
+                    printf("\nHow much time are you gonna spend: ");
+                    scanf("%[^\n]s", &inputTime);
+                    strcpy(users[input].booking.time, inputTime);
+                }
+            }
+            
+        }
+    }
 }
 
 void viewCourtBookings() {
@@ -90,7 +129,7 @@ int main() {
                 registerNewUser(users, size);
                 break;
             case 2:
-                bookCourt();
+                bookCourt(users, size);
                 break;
             case 3:
                 viewCourtBookings();
