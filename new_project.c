@@ -22,7 +22,7 @@ typedef struct {
     Booking booking;    // booking data embedded
 } User;
 
-void registerNewUser(User users[], int size) {
+void registerNewUser(User users[], int size) { // user[size-1].
     for (int i=0;i<size;i++) {
         printf("%d ", i+1);
     }
@@ -126,6 +126,7 @@ int main() {
         switch (input) {
             case 1:
                 size++;
+                realloc(users, size*sizeof(User));
                 registerNewUser(users, size);
                 break;
             case 2:
