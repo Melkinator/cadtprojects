@@ -22,10 +22,8 @@ typedef struct {
     Booking booking;    // booking data embedded
 } User;
 
-void registerNewUser(User users[], int size) { // user[size-1].
-    for (int i=0;i<size;i++) {
-        printf("%d ", i+1);
-    }
+void registerNewUser(User users[], int size) {
+    
 }
 
 void bookCourt(User users[], int size) {
@@ -51,7 +49,7 @@ void bookCourt(User users[], int size) {
                     } else if (inputID==users[i].booking.court_id) {
                         printf("\nConflicting court IDs with another user! Please try again.");
                         conflictFound = true;
-                        break;
+                        break; // loop if found conflicting ids for the court
                     }
                 }
                 if (!conflictFound) {
@@ -98,6 +96,11 @@ void viewUserInfo() {
 int main() {
     User *users;
     int size=0;
+    users = malloc(size*sizeof(User));
+    if (users==NULL) {
+        printf("Memory Allocation Failed.");
+        exit(1);
+    }
 
     bool end = false;
     int input;
@@ -114,12 +117,6 @@ int main() {
         printf("\n9. Save and exit.\n");
         printf("\nYour input: ");
         scanf("%d", &input);
-
-        users = malloc(size*sizeof(User));
-        if (users==NULL) {
-            printf("Memory Allocation Failed.");
-            exit(1);
-        }
 
         system("cls");
 
