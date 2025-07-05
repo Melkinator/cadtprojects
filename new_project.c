@@ -47,6 +47,14 @@ void registerNewUser(User users[], int size) { // user[size-1].
     scanf (" %[^\n]", &users[size -1].name);
 }
 
+void editUser    (User User[], int count);
+void removeUser    (User User[], int *count);
+void viewAllUser          (User User[], int count);
+void displayUserInfo        (User u1);        // show name and id only
+void saveUserToFile         (User User[], int count);
+void loadUserFromFile          (User User[], int *count);
+
+
 void bookCourt(User users[], int size) {
     int input, inputID;
     char inputDate[11], inputTime[6];
