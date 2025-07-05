@@ -16,14 +16,35 @@ typedef struct {
 } Booking;
 
 typedef struct {
-    char id[10];
+    int id;
     char name[30];
     Locker locker;      // locker data embedded
     Booking booking;    // booking data embedded
 } User;
 
-void registerNewUser(User users[], int size) {
-    
+void registerNewUser(User users[], int size) { // user[size-1].
+    if ( size <= 0)
+    {
+        printf ("Invalid input size\n. Please Try Again");
+    }
+
+    printf ("===== Register User =====");
+
+    int newId = 1000 + size;    // id start from 1001, 1002...
+
+    // Check for duplication
+    for ( int i = 0; i < size; i++)
+    {
+        if ( users[i].id == newId)
+        {
+            newId++;    // if the id already exist just increment it to the next one
+            break;
+        }
+    }
+    users[size -1].id =newId;   // to set the new id for the user
+
+    printf ("Enter Your Name: ");
+    scanf (" %[^\n]", &users[size -1].name);
 }
 
 void bookCourt(User users[], int size) {
@@ -49,7 +70,7 @@ void bookCourt(User users[], int size) {
                     } else if (inputID==users[i].booking.court_id) {
                         printf("\nConflicting court IDs with another user! Please try again.");
                         conflictFound = true;
-                        break; // loop if found conflicting ids for the court
+                        break;
                     }
                 }
                 if (!conflictFound) {
@@ -96,11 +117,6 @@ void viewUserInfo() {
 int main() {
     User *users;
     int size=0;
-    users = malloc(size*sizeof(User));
-    if (users==NULL) {
-        printf("Memory Allocation Failed.");
-        exit(1);
-    }
 
     bool end = false;
     int input;
@@ -117,6 +133,12 @@ int main() {
         printf("\n9. Save and exit.\n");
         printf("\nYour input: ");
         scanf("%d", &input);
+
+        users = malloc(size*sizeof(User));
+        if (users==NULL) {
+            printf("Memory Allocation Failed.");
+            exit(1);
+        }
 
         system("cls");
 
