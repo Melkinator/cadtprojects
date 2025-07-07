@@ -55,6 +55,13 @@ bool isCourtAvailable(User users[], int size, int courtID) {
     return true; // Court is available
 }
 
+void editUser    (User User[], int count);
+void removeUser    (User User[], int *count);
+void viewAllUser          (User User[], int count);
+void displayUserInfo        (User u1);        // show name and id only
+void saveUserToFile         (User User[], int count);
+void loadUserFromFile          (User User[], int *count);
+
 void bookCourt(User users[], int size) {
     while (getchar() != '\n');
     int input, inputID;
