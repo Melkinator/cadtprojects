@@ -22,13 +22,10 @@ typedef struct {
     Booking booking;    // booking data embedded
 } User;
 
-void registerNewUser(User users[], int size) { // user[size-1].
-    if ( size <= 0)
-    {
-        printf ("Invalid input size\n. Please Try Again");
-    }
+void registerNewUser(User users[], int size) {
+    char nameInput[30];
 
-    printf ("===== Register User =====");
+    printf ("\n===== Register User =====");
 
     int newId = 1000 + size;    // id start from 1001, 1002...
 
@@ -41,21 +38,25 @@ void registerNewUser(User users[], int size) { // user[size-1].
             break;
         }
     }
-    users[size -1].id =newId;   // to set the new id for the user
+    users[size-1].id=newId;   // to set the new id for the user
 
-    printf ("Enter Your Name: ");
-    scanf (" %[^\n]", &users[size -1].name);
+    printf("\nEnter Your Name: ");
+    while (getchar() != '\n');
+    scanf("%[^\n]", &nameInput);
+    strcpy(users[size-1].name, nameInput);
 }
 
-void editUser    (User User[], int count);
-void removeUser    (User User[], int *count);
-void viewAllUser          (User User[], int count);
-void displayUserInfo        (User u1);        // show name and id only
-void saveUserToFile         (User User[], int count);
-void loadUserFromFile          (User User[], int *count);
-
+bool isCourtAvailable(User users[], int size, int courtID) {
+    for (int i=0;i<size;i++) {
+        if (users[i].booking.court_id==courtID) {
+            return false; // Court is already booked by another user
+        }
+    }
+    return true; // Court is available
+}
 
 void bookCourt(User users[], int size) {
+    while (getchar() != '\n');
     int input, inputID;
     char inputDate[11], inputTime[6];
     bool end = false;
@@ -70,33 +71,27 @@ void bookCourt(User users[], int size) {
             while (!end) {
                 printf("\nWhich court do you want to book: ");
                 scanf("%d", &inputID);
-                bool conflictFound = false;
                 while (getchar() != '\n');
-                for (int i=0;i<size;i++) {
-                    if (i==input) {
-                        continue; // Skip the current user
-                    } else if (inputID==users[i].booking.court_id) {
-                        printf("\nConflicting court IDs with another user! Please try again.");
-                        conflictFound = true;
-                        break;
-                    }
-                }
-                if (!conflictFound) {
+                if (isCourtAvailable(users, size, inputID)) {
                     users[input].booking.court_id = inputID;
                     end = true;
                     printf("\nWhat date do you want to book the court on (DD-MM-YYYY): ");
-                    scanf("%[^\n]s", &inputDate);
+                    scanf("%[^\n]", &inputDate);
                     while (getchar() != '\n');
                     strcpy(users[input].booking.date, inputDate);
                     printf("\nHow much time are you gonna spend: ");
-                    scanf("%[^\n]s", &inputTime);
+                    scanf("%[^\n]", &inputTime);
                     strcpy(users[input].booking.time, inputTime);
+                } else {
+                    printf("\nCourt %d is already booked by another user. Please choose a different court.", inputID);
                 }
             }
             
         }
     }
 }
+
+
 
 void viewCourtBookings() {
 
@@ -125,6 +120,7 @@ void viewUserInfo() {
 int main() {
     User *users;
     int size=0;
+    users = malloc(size*sizeof(User));
 
     bool end = false;
     int input;
@@ -142,18 +138,23 @@ int main() {
         printf("\nYour input: ");
         scanf("%d", &input);
 
-        users = malloc(size*sizeof(User));
+        system("cls");
+
         if (users==NULL) {
             printf("Memory Allocation Failed.");
             exit(1);
-        }
-
-        system("cls");
+        }   
 
         switch (input) {
             case 1:
                 size++;
-                realloc(users, size*sizeof(User));
+                User *temp = realloc(users, size*sizeof(User)); // temp to prevent memory leak
+                if (temp == NULL) {
+                    printf("Memory allocation failed. Exiting program.");
+                    free(users);
+                    exit(1);
+                }
+                users = temp; // assign new memory to users after 
                 registerNewUser(users, size);
                 break;
             case 2:
@@ -186,7 +187,6 @@ int main() {
                 break;
         }
         printf("\nPress Enter key to go back to the menu or exit.");
-        getchar();
         getchar();
     } while (!end);
     return 0;
