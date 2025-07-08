@@ -44,6 +44,9 @@ void registerNewUser(User users[], int size) {
     while (getchar() != '\n');
     scanf("%[^\n]", &nameInput);
     strcpy(users[size-1].name, nameInput);
+    strcpy(users[size-1].booking.date, "None");
+    strcpy(users[size-1].booking.time, "None");
+    users[size-1].booking.court_id = -1; // -1 means no court booked
 }
 
 bool isCourtAvailable(User users[], int size, int courtID) {
@@ -55,18 +58,18 @@ bool isCourtAvailable(User users[], int size, int courtID) {
     return true; // Court is available
 }
 
-void editUser    (User User[], int count);
-void removeUser    (User User[], int *count);
-void viewAllUser          (User User[], int count);
-void displayUserInfo        (User u1);        // show name and id only
-void saveUserToFile         (User User[], int count);
-void loadUserFromFile          (User User[], int *count);
+void editUser(User User[], int count);
+void removeUser(User User[], int *count);
+void viewAllUser(User User[], int count);
+void displayUserInfo(User u1);        // show name and id only
+void saveUserToFile(User User[], int count);
+void loadUserFromFile(User User[], int *count);
 
 void bookCourt(User users[], int size) {
     while (getchar() != '\n');
     int input, inputID;
     char inputDate[11], inputTime[6];
-    bool end = false;
+    bool end = false; // used to loop back if the court is not available
     if (size==0) {
         printf("\nYou do not have any users registered. Please register a new user before booking.");
     } else if (size>0) {
@@ -93,19 +96,49 @@ void bookCourt(User users[], int size) {
                     printf("\nCourt %d is already booked by another user. Please choose a different court.", inputID);
                 }
             }
-            
         }
     }
 }
 
 
 
-void viewCourtBookings() {
-
+void viewCourtBookings(User users[], int size, int courtCount) {
+    if (courtCount>0) {
+        printf("\n===== Court Bookings =====\n");
+        for (int i=0;i<size;i++) {
+            printf("Name: %s\nID: %d\nCourt: %d\n", users[i].name, users[i].id, users[i].booking.court_id);
+        }
+    } else {
+        printf("\nNo users have booked a court yet. Please book one before trying again.");
+    }
 }
 
-void cancelCourtBooking() {
-
+void cancelCourtBooking(User users[], int size) {
+    int input;
+    bool end = false; // used to check if input is true
+    printf("\nAvailable Courts: ");
+    for (int i=0;i<size;i++) {
+        if (users[i].booking.court_id!=-1) {
+            printf("%d ", users[i].booking.court_id);
+        }
+    }
+    while (!end) {
+        printf("\nChoose the court you want to cancel: ");
+        scanf("%d", &input);
+        for (int i=0;i<size;i++) {
+            if (input==users[i].booking.court_id) {
+                users[i].booking.court_id = -1; // Reset court booking
+                strcpy(users[i].booking.date, "None");
+                strcpy(users[i].booking.time, "None");
+                printf("\nCourt booking has been cancelled.");
+                end = true; // exit loop
+                break;
+            } else {
+                printf("\nCourt %d does not exist. Please try again.", input);
+            }
+        }
+    }
+    
 }
 
 void assignLocker() {
@@ -126,7 +159,8 @@ void viewUserInfo() {
 
 int main() {
     User *users;
-    int size=0;
+    int size=0; // Used for dynamic memory allocation
+    int courtCount=0; // used to check if any court is available or not
     users = malloc(size*sizeof(User));
 
     bool end = false;
@@ -165,13 +199,19 @@ int main() {
                 registerNewUser(users, size);
                 break;
             case 2:
+                courtCount++;
                 bookCourt(users, size);
                 break;
             case 3:
-                viewCourtBookings();
+                viewCourtBookings(users, size, courtCount);
                 break;
             case 4:
-                cancelCourtBooking();
+                if (courtCount>0&&size>0) {
+                    courtCount--;
+                    cancelCourtBooking(users, size);
+                } else {
+                    printf("\nNo court has been booked yet. Please book a court before trying again.");
+                }
                 break;
             case 5:
                 assignLocker();
@@ -193,7 +233,8 @@ int main() {
                 printf("\nWrong input. Please try again.");
                 break;
         }
-        printf("\nPress Enter key to go back to the menu or exit.");
+        printf("\nPress Enter key to continue...");
+        getchar();
         getchar();
     } while (!end);
     return 0;
