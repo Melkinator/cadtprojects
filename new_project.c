@@ -106,7 +106,10 @@ void viewCourtBookings(User users[], int size, int courtCount) {
     if (courtCount>0) {
         printf("\n===== Court Bookings =====\n");
         for (int i=0;i<size;i++) {
-            printf("Name: %s\nID: %d\nCourt: %d\n", users[i].name, users[i].id, users[i].booking.court_id);
+            if (users[i].booking.court_id!=-1) {
+                printf("\nName: %s\nID: %d\nCourt: %d\nDate: %s\nTime: %s\n", users[i].name, users[i].id, users[i].booking.court_id, users[i].booking.date, users[i].booking.time);
+            }
+            
         }
     } else {
         printf("\nNo users have booked a court yet. Please book one before trying again.");
@@ -183,7 +186,7 @@ int main() {
 
         if (users==NULL) {
             printf("Memory Allocation Failed.");
-            exit(1);
+            exit(1);    
         }   
 
         switch (input) {
