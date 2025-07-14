@@ -73,10 +73,17 @@ void updateUser(User users[], int *size)
          printf ("No users registered. Please register a user first.\n");
          return; 
     }
-    printf ("====Update the Users====");
+    printf ("\n====Update the Users====\n");
+
+    printf ("ID     |   Name:\n");
+        for ( int i = 0; i < *size; i++)
+        {
+            printf ("%d   |   %s\n", users[i].id, users[i].name);
+        }
+
     // Enter which ID to update
     int inputId = -1;
-    printf ( "Updating User ID:");
+    printf ( "\nUpdating User ID:");
     scanf (" %d", &inputId);
 
     while ( getchar() != '\n'); //clear input buffer
@@ -98,7 +105,7 @@ void updateUser(User users[], int *size)
     char inputName[30];
     if ( isfound == true)
     {
-        printf ("Enter your New name:");
+        printf ("\nEnter your New name:");
         scanf (" %[^\n]", inputName);
 
         while ( getchar () != '\n');
@@ -117,47 +124,56 @@ void removeUser (User users[], int *size)
     {
         printf ("No users registered. Please register a user first\n");
         return;
-    }
-    printf ("====Remove the Users====");
-    //Input the desire ID
-    int inputId;
+    } else  {
 
-    printf ("Enter the ID of the user that needed to be removed: ");
-    scanf ("%d", &inputId);
+    
+        printf ("\n====Remove the Users====\n");
+        //Input the desire ID
+        int inputId;
 
-    //remove buffer
-    while ( getchar () != '\n');
-
-    if ( inputId >= 1000 )
-    {
-        //Check it with loop
-        bool isfound = false;
-        int index_found = -1;
+        printf ("ID     |   Name:\n");
         for ( int i = 0; i < *size; i++)
         {
-            if ( inputId == users[i].id )
-            {
-                isfound = true;
-                index_found = i;
-                break;
-            }
+            printf ("%d   |   %s\n", users[i].id, users[i].name);
         }
 
-        if ( isfound )
+        printf ("\nEnter the ID of the user that needed to be removed: ");
+        scanf ("%d", &inputId);
+
+        //remove buffer
+        while ( getchar () != '\n');
+
+        if ( inputId >= 1000 )
         {
-            //We loop from that index to *size, to replace from users[2] to users[1]
-            for ( int i = (index_found + 1) ; i < *size; i++ )
+            //Check it with loop
+            bool isfound = false;
+            int index_found = -1;
+            for ( int i = 0; i < *size; i++)
             {
-                users[i] = users[i + 1]; 
+                if ( inputId == users[i].id )
+                {
+                    isfound = true;
+                    index_found = i;
+                    break;
+                }
             }
 
-            // Decrease the size after the loop
-            *size = *size - 1; 
-            printf ("User ID %d removed successfully\n", inputId);
-        }
-    } else {
-        printf("User ID: %d not found\n", inputId);
-    }  
+            if ( isfound )
+            {
+                //We loop from that index to *size, to replace from users[2] to users[1]
+                for ( int i = (index_found + 1) ; i < *size; i++ )
+                {
+                    users[i] = users[i + 1]; 
+                }
+
+                // Decrease the size after the loop
+                *size = *size - 1; 
+                printf ("User ID %d removed successfully\n", inputId);
+            }
+        } else {
+            printf("User ID: %d not found\n", inputId);
+        }  
+    }
 }
 
 void viewAllUserInfo (User users[], int size)
