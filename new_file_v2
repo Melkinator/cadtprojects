@@ -43,12 +43,14 @@ void registerNewUser(User users[], int size) {
     // We use this empty any leftover character before reading the new input
     while (getchar() != '\n');
     
-    scanf("%[^\n]", &nameInput);    //It reads an entire line of input including spaces, stopping only when it encounters a newline
+    scanf("%[^\n]", &nameInput); //It reads an entire line of input including spaces, stopping only when it encounters a newline
+    while (getchar() != '\n');
     
     strcpy(users[size-1].name, nameInput);
     strcpy(users[size-1].booking.date, "None");
     strcpy(users[size-1].booking.time, "None");
 
+    printf ("Register User successfully\n");
     users[size-1].booking.court_id = -1; // -1 means no court booked
 }
 
@@ -60,11 +62,14 @@ void updateUser(User users[], int *size)
          printf ("No users registered. Please register a user first.\n");
          return; 
     }
-    int inputId = -1;
+    printf ("====Update the Users====");
     // Enter which ID to update
+    int inputId = -1;
     printf ( "Updating User ID:");
     scanf (" %d", &inputId);
-    while ( getchar() != '\n');
+
+    while ( getchar() != '\n'); //clear input buffer
+
     //Check if that Id have or not
     bool isfound = false;
     int index_found= -1;
@@ -73,14 +78,11 @@ void updateUser(User users[], int *size)
     {
         if ( inputId == users[i].id)
         {
-            isfound == true;
+            isfound = true;
             index_found = i;
             break;
         }
     }
-
-    //to remove buffer which is (\n)
-    while ( getchar() != '\n');
 
     char inputName[30];
     if ( isfound == true)
@@ -89,11 +91,12 @@ void updateUser(User users[], int *size)
         scanf (" %[^\n]", inputName);
 
         while ( getchar () != '\n');
+        
         strcpy (users[index_found].name , inputName);
-        print ("User name updated successfully for ID %d\n", users[index_found].name);
+        printf ("User name updated successfully for ID %d : %s\n", inputId, users[index_found].name);
     
     } else {
-        printf ("User ID not found. Please try again.\n");
+        printf ("User ID: %d not found. Please try again.\n", inputId);
     }
 }
 
@@ -101,33 +104,49 @@ void removeUser (User users[], int *size)
 {
     if ( *size == 0)
     {
-        printf ("No users registered. Please register a user first");
+        printf ("No users registered. Please register a user first\n");
         return;
     }
-
+    printf ("====Remove the Users====");
     //Input the desire ID
     int inputId;
+
     printf ("Enter the ID of the user that needed to be removed: ");
     scanf ("%d", &inputId);
 
-    //Check it with loop
-    bool isfound = false;
-    int index_found = -1;
-    for ( int i = 0; i < *size; i++)
-    {
-        if ( inputId == users[i].id )
-        {
-            isfound = true;
-            index_found = i;
-            break;
-        }
-    }
     //remove buffer
     while ( getchar () != '\n');
 
-    
-    //Print the output
-    
+    if ( inputId >= 1000 )
+    {
+        //Check it with loop
+        bool isfound = false;
+        int index_found = -1;
+        for ( int i = 0; i < *size; i++)
+        {
+            if ( inputId == users[i].id )
+            {
+                isfound = true;
+                index_found = i;
+                break;
+            }
+        }
+
+        if ( isfound )
+        {
+            //We loop from that index to *size, to replace from users[2] to users[1]
+            for ( int i = (index_found + 1) ; i < *size; i++ )
+            {
+                users[i] = users[i + 1]; 
+            }
+
+            // Decrease the size after the loop
+            *size = *size - 1; 
+            printf ("User ID %d removed successfully\n", inputId);
+        }
+    } else {
+        printf("User ID: %d not found\n", inputId);
+    }  
 }
 
 void viewAllUserInfo (User users[], int size)
@@ -140,7 +159,6 @@ void viewAllUserInfo (User users[], int size)
     {
         if ( users[i].id > 0 && users[i].name != '\0')
         {
-            //Method 1: if-else for bool
             char *availability;
             if ( users[i].locker.is_available )
             {
@@ -148,11 +166,12 @@ void viewAllUserInfo (User users[], int size)
             } else {
                 availability = not_available;
             }
+            
             printf ("\nName: %s \nID: %d \nLocker ID: %d \nCondition: %s \nLocker Availability: %s \nCourt ID: %d \nDate: %s \nTime: %s\n", 
                 users[i].name,
                 users[i].id,
                 users[i].locker.locker_id,
-                //Method 2: ternary (i only use it for bool and string of character) i remember i saw something like that from sliden
+                //Method 2: ternary (i only use it for bool and string of character) i saw something like that from sliden
                 users[i].locker.condition ? users[i].locker.condition : "Bad",  //it is easier to use ternary than if else
                 users[i].locker.is_available, 
                 users[i].booking.court_id,
@@ -318,30 +337,39 @@ int main() {
             case 1:
                 size++;
                 User *temp = realloc(users, size*sizeof(User)); // temp to prevent memory leak
+                
                 if (temp == NULL) {
                     printf("Memory allocation failed. Exiting program.");
                     free(users);
                     exit(1);    // Terminate entire program with error status
                 }
+                
                 users = temp; // assign new memory to users after 
+                
                 registerNewUser(users, size);
                 break;
+                
             case 2:
-
+                updateUser (users, &size);
                 break;
+
             case 3:
-
+                removeUser (users, &size);
                 break;
+
             case 4:
-
+                viewAllUserInfo (users, size);
                 break;
+
             case 5:
                 courtCount++;
                 bookCourt(users, size);
                 break;
+
             case 6:
                 viewCourtBookings(users, size, courtCount);
                 break;
+
             case 7:
                 if (courtCount>0&&size>0) {
                     courtCount--;
@@ -350,19 +378,24 @@ int main() {
                     printf("\nNo court has been booked yet. Please book a court before trying again.");
                 }
                 break;
+
             case 8:
                 assignLocker();
                 break;
+
             case 9:
                 changeLocker();
                 break;
+
             case 10:
                 viewLockerStatus();
                 break;
+
             case 11:
                 free(users);
                 end = true;
                 break;
+
             default:
                 printf("\nWrong input. Please try again.");
                 break;
