@@ -184,7 +184,8 @@ void viewAllUserInfo (User users[], int size)
     char* not_available = "Not Available";
     for ( int i = 0; i < size; i++)
     {
-        if ( users[i].id > 0 && users[i].name != '\0')
+        // Check if the name is empty or not
+        if ( users[i].id > 0 && users[i].name[0] != '\0')
         {
             char *availability;
             if ( users[i].locker.is_available )
