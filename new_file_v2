@@ -45,14 +45,25 @@ void registerNewUser(User users[], int size) {
     
     scanf("%[^\n]", &nameInput); //It reads an entire line of input including spaces, stopping only when it encounters a newline
     while (getchar() != '\n');
-    
+
+    //Check if the name input
+    if ( nameInput == '\0')
+    {
+        strcpy ( nameInput, "None");
+    }
+    //Booking field part
     strcpy(users[size-1].name, nameInput);
     strcpy(users[size-1].booking.date, "None");
     strcpy(users[size-1].booking.time, "None");
+    users[size-1].booking.court_id = -1; // -1 means no court booked
+
+    // locker fields part
+    users[size-1].locker.locker_id = -1;
+    strcpy(users[size-1].locker.condition, "None");
+    users[size-1].locker.is_available = false;
 
     printf ("Register User successfully\n");
-    users[size-1].booking.court_id = -1; // -1 means no court booked
-}
+}    
 
 void updateUser(User users[], int *size)
 {
