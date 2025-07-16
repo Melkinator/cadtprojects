@@ -11,7 +11,7 @@ typedef struct {
 
 typedef struct {
     int court_id;
-    char date[11];  // "DD-MM-YYYY"
+    char date[11];  // "YYYY-MM-DD"
     char time[6];   // "HH:MM"
 } Booking;
 
@@ -479,6 +479,37 @@ void viewLockerStatus(User users[], int count) {
     }
 }
 
+void saveFile(User *users, int size) {
+    FILE *file = fopen("data.dat", "wb");
+    if (file == NULL) {
+        printf("Error opening file for writing.\n");
+        return;
+    }
+    fwrite(&size, sizeof(int), 1, file); // save size first
+    fwrite(users, sizeof(User), size, file); // save user array
+    fclose(file);
+    printf("Data saved successfully.\n");
+}   
+
+User *loadFile(int *size) {
+    FILE *file = fopen("data.dat", "rb");
+    if (file == NULL) {
+        printf("Error opening file for writing.\n");
+        fclose(file);
+        return NULL; // return NULL if file cannot be opened
+    }
+    fread(size, sizeof(int), 1, file); // read size first
+    User *users = malloc((*size) * sizeof(User)); // allocate memory for users
+    if (users==NULL) {
+        printf("Memory allocation failed. Exiting program.");
+        fclose(file);
+        exit(1);    // close program if NULL
+    }
+    fread(users, sizeof(User), *size, file); // read user array
+    fclose(file);
+    printf("Data loaded successfully.\n");
+    return users; // return the loaded users array
+}
 
 int main() {
     User *users;
@@ -502,7 +533,10 @@ int main() {
         printf("\n8. Assign a locker.");
         printf("\n9. Return/Change locker.");
         printf("\n10. View locker status.");
-        printf("\n11. Save and exit.\n");
+        
+        printf("\n11. Save data to file.");
+        printf("\n12. Load data from file.");
+        printf("\n13. Save and exit.\n");
         printf("\nYour input: ");
         scanf("%d", &input);    
 
@@ -572,6 +606,13 @@ int main() {
                 viewLockerStatus(users, size);
                 break;
             case 11:
+                saveFile(users, size);
+                break;
+            case 12:
+                free(users); // Free old memory
+                users = loadFile(&size);
+                break;
+            case 13:
                 free(users);
                 end = true;
                 break;
