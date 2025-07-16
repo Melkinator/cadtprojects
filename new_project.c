@@ -11,7 +11,7 @@ typedef struct {
 
 typedef struct {
     int court_id;
-    char date[11];  // "YYYY-MM-DD"
+    char date[11];  // "DD-MM-YYYY"
     char time[6];   // "HH:MM"
 } Booking;
 
