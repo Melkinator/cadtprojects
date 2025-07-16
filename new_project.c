@@ -42,7 +42,7 @@ void registerNewUser(User users[], int size) {
     printf("\nEnter Your Name: ");
     // We use this empty any leftover character before reading the new input
     while (getchar() != '\n');
-    
+
     scanf("%[^\n]", nameInput); //It reads an entire line of input including spaces, stopping only when it encounters a newline
     while (getchar() != '\n');
 
@@ -63,15 +63,20 @@ void registerNewUser(User users[], int size) {
     users[size-1].locker.is_available = false;
 
     printf ("Register User successfully\n");
-}    
+}
 
 void updateUser(User users[], int *size)
 {
     //check if there is an Id or not
+    printf ("ID     |   Name:\n");
+    for ( int i = 0; i < *size; i++)
+    {
+        printf ("%d   |   %s\n", users[i].id, users[i].name);
+    }
     if ( *size == 0)
     {
          printf ("No users registered. Please register a user first.\n");
-         return; 
+         return;
     }
     printf ("\n====Update the Users====\n");
 
@@ -109,10 +114,10 @@ void updateUser(User users[], int *size)
         scanf (" %[^\n]", inputName);
 
         while ( getchar () != '\n');
-        
+
         strcpy (users[index_found].name , inputName);
         printf ("User name updated successfully for ID %d : %s\n", inputId, users[index_found].name);
-    
+
     } else {
         printf ("User ID: %d not found. Please try again.\n", inputId);
     }
@@ -126,7 +131,7 @@ void removeUser (User users[], int *size)
         return;
     } else  {
 
-    
+
         printf ("\n====Remove the Users====\n");
         //Input the desire ID
         int inputId;
@@ -163,22 +168,22 @@ void removeUser (User users[], int *size)
                 //We loop from that index to *size, to replace from users[2] to users[1]
                 for ( int i = index_found ; i < *size-1; i++ )
                 {
-                    users[i] = users[i + 1]; 
+                    users[i] = users[i + 1];
                     users[i].id = users[i+1].id-1;
                 }
 
                 // Decrease the size after the loop
-                *size = *size - 1; 
+                *size = *size - 1;
                 printf ("User ID %d removed successfully\n", inputId);
             }
         } else {
             printf("User ID: %d not found\n", inputId);
-        }  
+        }
     }
 }
 
 void viewAllUserInfo (User users[], int size)
-{   
+{
     if (size==0) {
         printf("\nNo users registered. Please register a user first.\n");
         return;
@@ -199,20 +204,20 @@ void viewAllUserInfo (User users[], int size)
             } else {
                 availability = not_available;
             }
-            
-            printf ("\nName: %s \nID: %d \nLocker ID: %d \nCondition: %s \nCourt ID: %d \nDate: %s \nTime: %s\n", 
+
+            printf ("\nName: %s \nID: %d \nLocker ID: %d \nCondition: %s \nCourt ID: %d \nDate: %s \nTime: %s\n",
                 users[i].name,
                 users[i].id,
                 users[i].locker.locker_id,
                 //Method 2: ternary (i only use it for bool and string of character) i saw something like that from sliden
-                users[i].locker.condition ? users[i].locker.condition : "Bad",  //it is easier to use ternary than if else 
+                users[i].locker.condition ? users[i].locker.condition : "Bad",  //it is easier to use ternary than if else
                 users[i].booking.court_id,
                 users[i].booking.date ? users[i].booking.date : "None",
                 users[i].booking.time ? users[i].booking.time : "None"
             );
         }
     }
-}  
+}
 
 bool isCourtAvailable (User users[], int size, int courtID) {
     for (int i=0;i<size;i++) {
@@ -222,46 +227,46 @@ bool isCourtAvailable (User users[], int size, int courtID) {
     }
     return true; // Court is available
 }
-    
+
 void bookCourt (User users[], int size) {
     while (getchar() != '\n');
 
     int input, inputID;
     char inputDate[11], inputTime[6];
     bool end = false; // used to loop back if the court is not available
-    
+
     if (size==0) {
         printf("\nYou do not have any users registered. Please register a new user before booking.");
-    
+
     } else if (size>0) {
         printf("\nFor which user do you want to book a court for? (0-%d): ", size-1);
         scanf("%d", &input);
         // while ( getchar() != '\n'); ??
         if (input>=size) {
             printf("\nUser does not exist.");
-        
+
         } else {
-           
+
             while (!end) {
                 printf("\nWhich court do you want to book: ");
                 scanf("%d", &inputID);
-                
+
                 while (getchar() != '\n');
-                
+
                 if (isCourtAvailable(users, size, inputID)) {
                     users[input].booking.court_id = inputID;
                     end = true;
                     printf("\nWhat date do you want to book the court on (DD-MM-YYYY): ");
                     scanf("%[^\n]", &inputDate);
-                    
+
                     while (getchar() != '\n');
-                    
+
                     strcpy(users[input].booking.date, inputDate);
-                    
+
                     printf("\nHow much time are you gonna spend: ");
                     scanf("%[^\n]", &inputTime);
                     strcpy(users[input].booking.time, inputTime);
-                
+
                 } else {
                     printf("\nCourt %d is already booked by another user. Please choose a different court.", inputID);
                 }
@@ -278,7 +283,7 @@ void viewCourtBookings (User users[], int size, int courtCount) {
             if (users[i].booking.court_id!=-1) {
                 printf("\nName: %s\nID: %d\nCourt: %d\nDate: %s\nTime: %s\n", users[i].name, users[i].id, users[i].booking.court_id, users[i].booking.date, users[i].booking.time);
             }
-            
+
         }
     } else {
         printf("\nNo users have booked a court yet. Please book one before trying again.\n");
@@ -305,17 +310,17 @@ void cancelCourtBooking(User users[], int size) {
                 users[i].booking.court_id = -1; // Reset court booking
                 strcpy(users[i].booking.date, "None");
                 strcpy(users[i].booking.time, "None");
-                
+
                 printf("\nCourt booking has been cancelled.");
                 end = true; // exit loop
                 break;
-            
+
             } else {
                 printf("\nCourt %d does not exist. Please try again.", input);
             }
         }
     }
-    
+
 }
 
 // Check if a specific locker is available
@@ -334,9 +339,9 @@ void assignLocker(User users[], int count) {
         printf("\nNo users registered. Please register a user first.");
         return;
     }
-    
+
     printf("\n===== Assign Locker =====");
-    
+
     // Display all users
     printf("\nAvailable Users:");
     for (int i = 0; i < count; i++) {
@@ -345,32 +350,32 @@ void assignLocker(User users[], int count) {
             printf(" - Already has locker %d", users[i].locker.locker_id);
         }
     }
-    
+
     int userChoice;
     printf("\nSelect user (0-%d): ", count - 1);
     scanf("%d", &userChoice);
-    
+
     if (userChoice < 0 || userChoice >= count) {
         printf("\nInvalid user selection.");
         return;
     }
-    
+
     // Check if user already has a locker
     if (users[userChoice].locker.locker_id != 0 && users[userChoice].locker.is_available == false) {
-        printf("\nUser %s already has locker %d assigned.", 
+        printf("\nUser %s already has locker %d assigned.",
                users[userChoice].name, users[userChoice].locker.locker_id);
         return;
     }
-    
+
     int lockerId;
     printf("\nEnter locker ID to assign: ");
     scanf("%d", &lockerId);
-    
+
     if (isLockerAvailable(users, count, lockerId)) {
         users[userChoice].locker.locker_id = lockerId;
         users[userChoice].locker.is_available = false;
         strcpy(users[userChoice].locker.condition, "Good");
-        
+
         printf("\nLocker %d successfully assigned to %s.", lockerId, users[userChoice].name);
     } else {
         printf("\nLocker %d is already assigned to another user.", lockerId);
@@ -383,46 +388,46 @@ void returnOrChangeLocker(User users[], int count) {
         printf("\nNo users registered.");
         return;
     }
-    
+
     printf("\n===== Return/Change Locker =====");
-    
+
     // Display users with lockers
     printf("\nUsers with assigned lockers:");
     bool hasLockers = false;
     for (int i = 0; i < count; i++) {
         if (users[i].locker.locker_id != 0 && users[i].locker.is_available == false) {
-            printf("\n%d. %s (ID: %d) - Locker %d", 
+            printf("\n%d. %s (ID: %d) - Locker %d",
                    i, users[i].name, users[i].id, users[i].locker.locker_id);
             hasLockers = true;
         }
     }
-    
+
     if (!hasLockers) {
         printf("\nNo users have assigned lockers.");
         return;
     }
-    
+
     int userChoice;
     printf("\nSelect user: ");
     scanf("%d", &userChoice);
-    
+
     if (userChoice < 0 || userChoice >= count) {
         printf("\nInvalid user selection.");
         return;
     }
-    
+
     if (users[userChoice].locker.locker_id == 0 || users[userChoice].locker.is_available == true) {
         printf("\nUser %s doesn't have a locker assigned.", users[userChoice].name);
         return;
     }
-    
+
     printf("\n1. Return locker");
     printf("\n2. Change locker");
     printf("\nChoose option: ");
-    
+
     int option;
     scanf("%d", &option);
-    
+
     if (option == 1) {
         // Return locker
         printf("\nLocker %d returned by %s.", users[userChoice].locker.locker_id, users[userChoice].name);
@@ -435,12 +440,12 @@ void returnOrChangeLocker(User users[], int count) {
         int newLockerId;
         printf("\nEnter new locker ID: ");
         scanf("%d", &newLockerId);
-        
+
         if (isLockerAvailable(users, count, newLockerId)) {
             int oldLockerId = users[userChoice].locker.locker_id;
             users[userChoice].locker.locker_id = newLockerId;
             strcpy(users[userChoice].locker.condition, "Good");
-            
+
             printf("\nLocker changed from %d to %d for %s.", oldLockerId, newLockerId, users[userChoice].name);
         } else {
             printf("\nLocker %d is already assigned to another user.", newLockerId);
@@ -453,27 +458,27 @@ void returnOrChangeLocker(User users[], int count) {
 // View all locker status
 void viewLockerStatus(User users[], int count) {
     printf("\n===== Locker Status =====");
-    
+
     if (count == 0) {
         printf("\nNo users registered.");
         return;
     }
-    
+
     printf("\n%-10s %-20s %-15s %-10s", "Locker ID", "User Name", "User ID", "Condition");
     printf("\n%s", "----------------------------------------------------------------");
-    
+
     bool hasAssignedLockers = false;
     for (int i = 0; i < count; i++) {
         if (users[i].locker.locker_id != 0 && users[i].locker.is_available == false) {
-            printf("\n%-10d %-20s %-15d %-10s", 
-                   users[i].locker.locker_id, 
-                   users[i].name, 
-                   users[i].id, 
+            printf("\n%-10d %-20s %-15d %-10s",
+                   users[i].locker.locker_id,
+                   users[i].name,
+                   users[i].id,
                    users[i].locker.condition);
             hasAssignedLockers = true;
         }
     }
-    
+
     if (!hasAssignedLockers) {
         printf("\nNo lockers are currently assigned.");
     }
@@ -489,7 +494,7 @@ void saveFile(User *users, int size) {
     fwrite(users, sizeof(User), size, file); // save user array
     fclose(file);
     printf("Data saved successfully.\n");
-}   
+}
 
 User *loadFile(int *size) {
     FILE *file = fopen("data.dat", "rb");
@@ -533,43 +538,43 @@ int main() {
         printf("\n8. Assign a locker.");
         printf("\n9. Return/Change locker.");
         printf("\n10. View locker status.");
-        
+
         printf("\n11. Save data to file.");
         printf("\n12. Load data from file.");
         printf("\n13. Save and exit.\n");
         printf("\nYour input: ");
-        scanf("%d", &input);    
+        scanf("%d", &input);
 
         system("cls");
 
         if (users==NULL) {
             printf("Memory Allocation Failed.");
-            exit(1); // exit with error status   
-        }   
+            exit(1); // exit with error status
+        }
 
         switch (input) {
             case 1:
                 size++;
                 User *temp = realloc(users, size*sizeof(User)); // temp to prevent memory leak
-                
+
                 if (temp == NULL) {
                     printf("Memory allocation failed. Exiting program.");
                     free(users);
                     exit(1);    // Terminate entire program with error status
                 }
-                
-                users = temp; // assign new memory to users after 
-                
+
+                users = temp; // assign new memory to users after
+
                 registerNewUser(users, size);
                 break;
-                
+
             case 2:
                 updateUser (users, &size);
                 break;
 
             case 3:
                 removeUser (users, &size);
-                
+
                 break;
 
             case 4:
@@ -621,8 +626,8 @@ int main() {
                 printf("\nWrong input. Please try again.");
                 break;
         }
-        printf("\nPress Enter key to continue..."); 
-        
+        printf("\nPress Enter key to continue...");
+
         getchar();  //when we scan finish it will left with \n  this will clean that newline
         getchar();  // this one will wait for the [Enter] key for the User
         //If we put only one getchar(), it will not wait for the user to press enter
