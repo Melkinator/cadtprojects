@@ -161,9 +161,10 @@ void removeUser (User users[], int *size)
             if ( isfound )
             {
                 //We loop from that index to *size, to replace from users[2] to users[1]
-                for ( int i = (index_found + 1) ; i < *size; i++ )
+                for ( int i = index_found ; i < *size-1; i++ )
                 {
                     users[i] = users[i + 1]; 
+                    users[i].id = users[i+1].id-1;
                 }
 
                 // Decrease the size after the loop
