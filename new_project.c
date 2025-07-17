@@ -68,11 +68,6 @@ void registerNewUser(User users[], int size) {
 void updateUser(User users[], int *size)
 {
     //check if there is an Id or not
-    printf ("ID     |   Name:\n");
-    for ( int i = 0; i < *size; i++)
-    {
-        printf ("%d   |   %s\n", users[i].id, users[i].name);
-    }
     if ( *size == 0)
     {
          printf ("No users registered. Please register a user first.\n");
